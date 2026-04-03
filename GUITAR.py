@@ -1,14 +1,15 @@
 
-from windows.Ventana_gui import MainWindow
-from linux.Ventana_gui import MainWindow
-import logging
-""" 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s.%(msecs)03d [%(threadName)s] %(levelname)s: %(message)s",
-    datefmt="%H:%M:%S"
-)
-"""
+# GUITAR.py
+import sys
+
+PLATFORM = sys.platform
+
+if PLATFORM.startswith("win"):
+    from windows.Ventana_gui import MainWindow
+elif PLATFORM.startswith("linux"):
+    from linux.Ventana_gui import MainWindow
+else:
+    raise RuntimeError(f"Sistema operativo no soportado: {PLATFORM}")
 
 if __name__ == "__main__":
     app = MainWindow()
