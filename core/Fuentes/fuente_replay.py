@@ -1,5 +1,5 @@
 
-# core/Fuentes/replay_bin.py
+# core/Fuentes/fuente_replay.py
 """
 Fuente de datos TAR desde archivo binario (modo REPLAY).
 
@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 
-class ReplayBinSource:
+class ReplayFuente:
 
     def __init__(
         self,
@@ -39,7 +39,7 @@ class ReplayBinSource:
 
 
     # =============================================================
-    # INTERFAZ PÚBLICA (compatible con SerialSource)
+    # INTERFAZ PÚBLICA 
     # =============================================================
     def close(self) -> None:
         self._stop()
@@ -137,4 +137,5 @@ class ReplayBinSource:
 
         return int(avance)
 
+  
   
