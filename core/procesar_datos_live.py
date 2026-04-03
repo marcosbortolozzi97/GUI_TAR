@@ -139,4 +139,3 @@ class ProcesaDatosLive(ProcesaDatosBase):
         """Cantidad de chunks pendientes en la cola."""
         return self.data_queue.qsize()
     
-    
