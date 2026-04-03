@@ -186,6 +186,7 @@ class ProcesaDatosBase:
             # Suma los descartados de este nivel + los del parser
             "frames_descartados": self._frames_descartados + parser_stats["frames_descartados"]
         }
+        }
 
 
 
