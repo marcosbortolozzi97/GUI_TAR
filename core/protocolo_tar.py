@@ -183,3 +183,4 @@ class TARFrameParser:
         """Limpia buffer y contadores (se usa al cambiar de fuente/archivo)."""
         self._buffer.clear()
         self._frames_descartados = 0
+
