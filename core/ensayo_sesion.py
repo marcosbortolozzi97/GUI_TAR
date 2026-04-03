@@ -1,5 +1,5 @@
 
-# core/ensayo_sesion.py
+# core/ensayo_sesion.py 
 """
 Orquestador del ciclo de vida de un ensayo TAR.
  
