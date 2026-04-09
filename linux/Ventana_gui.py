@@ -564,7 +564,7 @@ BIN (bin/):
         tk.Label(
             parent,
             text=contenido.strip(),
-            font=("TkDefaultFont", "Liberation Sans", "DejaVu Sans", 10),
+            font=( "DejaVu Sans", 10),
             justify="left",
             anchor="w",
             bg="white",
