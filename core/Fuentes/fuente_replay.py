@@ -21,7 +21,7 @@ class ReplayFuente:
 
     def __init__(
         self,
-        path: str | Path,
+        path: Union[str, Path],
         chunk_size:  int   = 256,       # Bytes por emisión (mismo que SerialSource)
         interval_s:  float = 0.023      # Pausa entre chunks (baudrate 115200 ≈ 0.023s por chunk de 256 bytes)
     ):
