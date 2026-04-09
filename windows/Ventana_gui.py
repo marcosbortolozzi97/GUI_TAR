@@ -48,7 +48,7 @@ class MainWindow(tk.Tk):
         # ---------------------------------
         self.fuente        = None   # Fuente activa: apunta a serial_source o a un ReplayBinSource
         self.serial_source = None   # Fuente serie persistente (se mantiene entre ensayos LIVE)
-        self.ensayo: EnsayoSession | None = None   # Sesión activa o None
+        self.ensayo: Optional[EnsayoSession] = None    # Sesión activa o None
 
         # Control temporal del ensayo LIVE:
         self._temp              = None    # Timestamp (time.time) cuando debe autostopear (None = sin límite)
