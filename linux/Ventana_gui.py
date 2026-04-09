@@ -154,11 +154,11 @@ class MainWindow(tk.Tk):
         self.logos_instituciones = []  # Mantener referencias para evitar garbage collection
         logos_izq = [
             ("logo_UNR.png", (40, 40)),
-            ("FCEIA_logo.png", (60, 40)),
-            ("DSI_logo.png", (41, 41)),
+            ("FCEIA_logo.PNG", (60, 40)),
+            ("DSI_logo.PNG", (41, 41)),
             ("logo_IENRI.png", (65, 55)),
-            ("RA4_logo.png", (70, 40)),
-            ("CNEA_logo.png", (42, 37.5))
+            ("RA4_logo.PNG", (70, 40)),
+            ("CNEA_logo.PNG", (42, 37.5))
         ]
         
         for idx, (filename, size) in enumerate(logos_izq):
