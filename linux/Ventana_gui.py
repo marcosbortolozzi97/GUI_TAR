@@ -709,12 +709,18 @@ Versión: 1.0.0 | 2026
  
         # ── Scroll con rueda del mouse ───────────────────────────────
         def _on_mousewheel(event):
-            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
- 
-        canvas.bind_all("<MouseWheel>", _on_mousewheel)
- 
+            if event.num == 5 or event.delta < 0:      # Scroll down
+                canvas.yview_scroll(1, "units")
+            elif event.num == 4 or event.delta > 0:    # Scroll up
+                canvas.yview_scroll(-1, "units")
+
+
+        canvas.bind_all("<Button-4>", _on_mousewheel)      # Linux scroll up
+        canvas.bind_all("<Button-5>", _on_mousewheel)      # Linux scroll down
+
         def _on_closing():
-            canvas.unbind_all("<MouseWheel>")
+            canvas.unbind_all("<Button-4>")
+            canvas.unbind_all("<Button-5>")
             win.destroy()
  
         win.protocol("WM_DELETE_WINDOW", _on_closing)
