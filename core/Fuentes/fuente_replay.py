@@ -14,7 +14,7 @@ SerialSource, así EnsayoSession puede usarlas intercambiando.
 import threading
 import time
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
 
 
 class ReplayFuente:
