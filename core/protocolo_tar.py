@@ -34,8 +34,8 @@ MSK_VP = 0x3FFF      # 14 bits de Valor Pico
 # =============================================================
 # CÓDIGOS DE CANAL (campo CH, 2 bits)
 # =============================================================
-CH_A        = 0b01   # Canal A
-CH_B        = 0b10   # Canal B 
+CH_A        = 0b10   # Canal A
+CH_B        = 0b01   # Canal B 
 CH_OVERFLOW = 0b11   # Marca especial: el contador TS de 32 bits desbordó
 
 
@@ -117,6 +117,7 @@ class TARFrameParser:
         self._buffer            = bytearray()   # Bytes recibidos y no procesados aún
         self._frames_descartados = 0            # Frames que no pasaron validación HDR/FTR
 
+
     # -------------------------------------------------
     def feed(self, data: bytes) -> List[TARFrame]:
         """
@@ -129,48 +130,23 @@ class TARFrameParser:
         """
         self._buffer.extend(data)
         frames = []
-        i = 0   # Puntero de lectura dentro del buffer
+        i = 0
 
         while i + FRAME_SIZE <= len(self._buffer):
             raw = bytes(self._buffer[i:i + FRAME_SIZE])
 
-            # ── Validación HDR / FTR ─────────────────────────────────
-            # En memoria: raw[0] debe ser FTR, raw[7] debe ser HDR.
-            if raw[7] != HDR or raw[0] != FTR:
-                self._frames_descartados += 1
-
-                # Resincronización: solo al arranque del buffer.
-                # Si los primeros bytes son basura (ej: media trama de
-                # una conexión previa), busca el offset correcto.
-                if i == 0 and len(self._buffer) >= 16:
-                    found = False
-                    for offset in range(1, min(8, len(self._buffer) - FRAME_SIZE)):
-                        test = bytes(self._buffer[offset:offset + FRAME_SIZE])
-                        if test[7] == HDR and test[0] == FTR:
-                            i = offset
-                            found = True
-                            break
-                    if found:
-                        continue   # Reintenta desde el nuevo offset
-
-                # Sin resincronización posible: salta 8 bytes
+            if raw[7] == HDR and raw[0] == FTR:
+                # Frame válido: decodificar
+                word = int.from_bytes(raw, byteorder='little')
+                ts = (word >> 24) & MSK_TS
+                ch = (word >> 22) & MSK_CH
+                vp = (word >>  8) & MSK_VP
+                frames.append(TARFrame(ts, ch, vp, raw))
                 i += FRAME_SIZE
-                continue
-
-            # ── Reconstrucción del word de 64 bits ───────────────────
-            # Little endian: raw[0] es el byte menos significativo.
-            word = 0
-            for j in range(8):
-                word |= raw[j] << (8 * j)
-
-            # ── Extracción de campos ─────────────────────────────────
-            # HDR[63:56] TS[55:24] CH[23:22] VP[21:8] FTR[7:0]
-            ts = (word >> 24) & MSK_TS   # Timestamp  (32 bits)
-            ch = (word >> 22) & MSK_CH   # Canal      ( 2 bits)
-            vp = (word >>  8) & MSK_VP   # Valor Pico (14 bits)
-
-            frames.append(TARFrame(ts, ch, vp, raw))
-            i += FRAME_SIZE
+            else:
+                # Desalineado: avanzar byte a byte hasta encontrar alineación
+                self._frames_descartados += 1
+                i += 1
 
         # ── Limpieza del buffer ──────────────────────────────────────
         # Borra los bytes ya consumidos. Los restantes (< 8) esperan
@@ -178,9 +154,11 @@ class TARFrameParser:
         del self._buffer[:i]
         return frames
 
+
     # -------------------------------------------------
     def reset(self):
         """Limpia buffer y contadores (se usa al cambiar de fuente/archivo)."""
         self._buffer.clear()
         self._frames_descartados = 0
+
 
